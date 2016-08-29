@@ -872,7 +872,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
   height: auto; }
 </style>
 
-<title>Random Imgur</title><script type="text/template" id="controlbox-view-template"><p>If you're visiting from the old s3 url, this page is now at <a href="http://wallopics.com">WallOPics.com</a>. So bookmark that instead!</p><p>This page has loaded <span class="totalCounter">0</span> random imgur urls, <span class="existantCounter">0</span> of which were actual images.  Based on this sample, imgur's 5-char keyspace is <span class="percent">0</span>% full.</p><p>Made by <a href="http://www.kevinkuchta.com">Kevin Kuchta.</a> Fork me on <a href="http://www.github.com/kkuchta/RandomImagur2">Github.</a></p><p><a href="#" class="kittenModeToggle">Toggle Kitten Mode</a></p></script></head><body><div id="image-container"></div>
+<title>Random Twitch</title><script type="text/template" id="controlbox-view-template"><p>This page has loaded <span class="totalCounter">0</span> random twitch emotes, <span class="existantCounter">0</span> of which were actual images.  <span class="percent">0</span><a href="#" class="kittenModeToggle">Toggle Kitten Mode</a></p></script></head><body><div id="image-container"></div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 <script type="text/javascript" >
 
@@ -2957,12 +2957,12 @@ if (typeof JSON !== 'object') {
   window.ImgurStore = (function() {
     function ImgurStore(imageBufferSize, minWidth, kittenMode) {
       this.imageBufferSize = imageBufferSize != null ? imageBufferSize : 30;
-      this.minWidth = minWidth != null ? minWidth : 150;
+      this.minWidth = minWidth != null ? minWidth : 1;
       this.kittenMode = kittenMode != null ? kittenMode : false;
       this._autoFill = __bind(this._autoFill, this);
       this.imageList = [];
       this.fillCounter = 0;
-      this.autoFillInterval = 50;
+      this.autoFillInterval = 250;
       this.nonExistantCounter = 0;
       this.totalCounter = 0;
     }
@@ -2997,15 +2997,7 @@ if (typeof JSON !== 'object') {
       return _results;
     };
 
-    ImgurStore.prototype._makeid = function() {
-      var i, possible, text, _i;
-      text = "";
-      possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      for (i = _i = 1; _i <= 5; i = ++_i) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return text;
-    };
+    ImgurStore.prototype.text = 1
 
     ImgurStore.prototype._fetchImage = function() {
       var recurseUntilSuccess,
@@ -3024,8 +3016,9 @@ if (typeof JSON !== 'object') {
     ImgurStore.prototype._tryToGetImage = function(success, failure) {
       var $deferred, $img, url,
         _this = this;
-      url = 'http://i.imgur.com/' + this._makeid() + '.jpg';
-      $img = $("<img class='imgurImage' src='" + url + "'>");
+      url = 'https://static-cdn.jtvnw.net/emoticons/v1/' + this.text + '/3.0';
+      this.text += 1;
+      $img = $("<img class='imgurImage' src='" + url + "'>").delay(50);
       $deferred = $.Deferred();
       $img.css('position', 'absolute');
       $img.css('left', '-10000px');
@@ -3034,8 +3027,8 @@ if (typeof JSON !== 'object') {
       $('body').append($img);
       $img.load(function(e) {
         _this.totalCounter++;
-        if (($img.width() === 161 && $img.height() === 81) || ($img.width() < _this.minWidth) || ($img.width() < 25 || $img.height() < 25)) {
-          if ($img.width() === 161 && $img.height() === 81) {
+        if (($img.width() === 1 && $img.height() === 1) || ($img.width() < _this.minWidth) || ($img.width() < 1 || $img.height() < 1)) {
+          if ($img.width() === 1 && $img.height() === 1) {
             _this.nonExistantCounter++;
           }
           $deferred.reject();
@@ -3174,7 +3167,7 @@ if (typeof JSON !== 'object') {
 
       Wall.prototype.initialize = function(options) {
         var store;
-        store = new ImgurStore(1000, 150, options.kittenMode);
+        store = new ImgurStore(1000, 25, options.kittenMode);
         this.collection = new RIW.ImageCollection([], {
           store: store
         });
@@ -3379,7 +3372,7 @@ if (typeof JSON !== 'object') {
 
   window.RIW = {};
 
-  window.COLUMN_WIDTH = 150;
+  window.COLUMN_WIDTH = 25;
 
 }).call(this);
 
